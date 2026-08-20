@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log In – Gigga</title>
+  <meta name="description" content="Log in to your Gigga account to find or post student side-jobs." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-page">
+
+  <a href="index.html" class="auth-back">← Back to Gigga</a>
+
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span class="logo-icon">G</span>
+        <span>Gigga</span>
+      </div>
+      <h1>Welcome Back</h1>
+      <p class="auth-sub">Log in to your account</p>
+
+      <div id="authMsg" class="auth-msg hidden"></div>
+
+      <form id="loginForm" class="auth-form" novalidate>
+        <div class="form-group">
+          <label for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com" required />
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <div class="input-wrap">
+            <input type="password" id="loginPassword" placeholder="••••••••" required />
+            <button type="button" class="toggle-pw" id="toggleLoginPw" aria-label="Toggle password">👁</button>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary full" id="loginBtn">Log In</button>
+      </form>
+
+      <div class="auth-divider"><span>Don't have an account?</span></div>
+      <div class="auth-alt-links">
+        <a href="register-student.html" class="btn-outline full">Join as a Student</a>
+        <a href="register-business.html" class="btn-outline full">Join as a Business</a>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="auth.js"></script>
+</body>
+</html>

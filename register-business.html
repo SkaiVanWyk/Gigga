@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business Sign Up – Gigga</title>
+  <meta name="description" content="Register your business on Gigga and start posting side-jobs for students." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-page">
+
+  <a href="index.html" class="auth-back">← Back to Gigga</a>
+
+  <div class="auth-container">
+    <div class="auth-card wide">
+      <div class="auth-logo">
+        <span class="logo-icon">G</span>
+        <span>Gigga</span>
+      </div>
+      <div class="role-badge business-badge">💼 Business Registration</div>
+      <h1>Post Your First Job</h1>
+      <p class="auth-sub">Connect with talented students in your area</p>
+
+      <div id="authMsg" class="auth-msg hidden"></div>
+
+      <form id="registerBusinessForm" class="auth-form" novalidate>
+        <div class="form-group">
+          <label for="bizName">Business / Company Name</label>
+          <input type="text" id="bizName" placeholder="Acme Studio" required />
+        </div>
+        <div class="form-group">
+          <label for="bizEmail">Business Email</label>
+          <input type="email" id="bizEmail" placeholder="contact@yourbusiness.co.za" required />
+        </div>
+        <div class="form-group">
+          <label for="bizPassword">Password</label>
+          <div class="input-wrap">
+            <input type="password" id="bizPassword" placeholder="Min 8 characters" required />
+            <button type="button" class="toggle-pw" id="toggleBizPw" aria-label="Toggle password">👁</button>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bizPhone">Phone Number</label>
+            <input type="tel" id="bizPhone" placeholder="+27 21 000 0000" />
+          </div>
+          <div class="form-group">
+            <label for="bizCity">City</label>
+            <input type="text" id="bizCity" placeholder="Cape Town" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="bizIndustry">Industry</label>
+          <select id="bizIndustry">
+            <option value="">Select industry...</option>
+            <option>Technology</option>
+            <option>Marketing & Media</option>
+            <option>Retail & Sales</option>
+            <option>Food & Hospitality</option>
+            <option>Events & Entertainment</option>
+            <option>Education</option>
+            <option>Healthcare</option>
+            <option>Finance</option>
+            <option>Creative Arts & Design</option>
+            <option>Logistics & Delivery</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="bizDesc">About Your Business</label>
+          <textarea id="bizDesc" rows="3" placeholder="Tell students what you do and what kind of help you're looking for..."></textarea>
+        </div>
+        <div class="avatar-upload-wrap">
+          <div class="avatar-preview square" id="logoPreview">
+            <span>Logo</span>
+          </div>
+          <div class="avatar-upload-info">
+            <label for="logoInput" class="btn-outline-sm">Upload Logo</label>
+            <input type="file" id="logoInput" accept="image/*" hidden />
+            <small>Optional – JPG, PNG – Max 5MB</small>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary full" id="bizRegisterBtn">Create Business Account →</button>
+      </form>
+
+      <div class="auth-divider"><span>Already registered?</span></div>
+      <a href="login.html" class="btn-ghost full">Log In</a>
+    </div>
+  </div>
+
+  <script type="module" src="register-business.js"></script>
+</body>
+</html>

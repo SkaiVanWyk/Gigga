@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browse Jobs – Gigga</title>
+  <meta name="description" content="Browse flexible student side-jobs posted by local businesses on Gigga." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="inner-page">
+
+  <!-- NAV -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">G</span>
+        <span>Gigga</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="jobs.html" class="active">Browse Jobs</a>
+        <a href="post-job.html" id="navPostJob" class="hidden">Post a Job</a>
+        <a href="profile.html" id="navProfile" class="hidden">My Profile</a>
+        <a href="login.html" id="navLogin" class="btn-ghost">Log In</a>
+        <a href="register-student.html" id="navSignup" class="btn-primary-sm">Sign Up</a>
+        <button id="navLogout" class="btn-ghost hidden">Log Out</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Browse <span class="gradient-text">Jobs</span></h1>
+      <p>Find your perfect side hustle from hundreds of opportunities</p>
+    </div>
+  </section>
+
+  <!-- SEARCH & FILTERS -->
+  <section class="filters-bar">
+    <div class="container">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search by title, skill, or keyword..." />
+      </div>
+      <div class="filter-chips">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="Technology">Tech</button>
+        <button class="chip" data-filter="Creative Arts & Design">Design</button>
+        <button class="chip" data-filter="Marketing & Media">Marketing</button>
+        <button class="chip" data-filter="Food & Hospitality">Hospitality</button>
+        <button class="chip" data-filter="Events & Entertainment">Events</button>
+        <button class="chip" data-filter="Logistics & Delivery">Delivery</button>
+      </div>
+      <div class="filter-selects">
+        <select id="cityFilter">
+          <option value="">All Cities</option>
+          <option>Cape Town</option>
+          <option>Johannesburg</option>
+          <option>Pretoria</option>
+          <option>Durban</option>
+          <option>Port Elizabeth</option>
+        </select>
+        <select id="typeFilter">
+          <option value="">All Types</option>
+          <option>Part-time</option>
+          <option>Full-time</option>
+          <option>Freelance</option>
+          <option>Weekend</option>
+          <option>Once-off</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOBS GRID -->
+  <section class="jobs-section">
+    <div class="container">
+      <div class="jobs-meta" id="jobsMeta">Loading jobs...</div>
+      <div class="jobs-grid" id="jobsGrid">
+        <div class="job-skeleton"></div>
+        <div class="job-skeleton"></div>
+        <div class="job-skeleton"></div>
+        <div class="job-skeleton"></div>
+        <div class="job-skeleton"></div>
+        <div class="job-skeleton"></div>
+      </div>
+      <div class="empty-state hidden" id="emptyJobs">
+        <span>😕</span>
+        <h3>No jobs found</h3>
+        <p>Try a different search or filter</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOB MODAL -->
+  <div class="modal-overlay hidden" id="jobModal">
+    <div class="modal-card" id="jobModalCard">
+      <button class="modal-close" id="jobModalClose">✕</button>
+      <div id="jobModalContent"><!-- dynamic --></div>
+    </div>
+  </div>
+
+  <script type="module" src="jobs.js"></script>
+</body>
+</html>

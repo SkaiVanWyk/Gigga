@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Sign Up – Gigga</title>
+  <meta name="description" content="Create a free student account on Gigga and start applying for side-jobs today." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-page">
+
+  <a href="index.html" class="auth-back">← Back to Gigga</a>
+
+  <div class="auth-container">
+    <div class="auth-card wide">
+      <div class="auth-logo">
+        <span class="logo-icon">G</span>
+        <span>Gigga</span>
+      </div>
+      <div class="role-badge student-badge">🎓 Student Registration</div>
+      <h1>Create Your Profile</h1>
+      <p class="auth-sub">Start applying for flexible side-jobs today</p>
+
+      <div id="authMsg" class="auth-msg hidden"></div>
+
+      <form id="registerStudentForm" class="auth-form" novalidate>
+
+        <!-- Step 1: Account -->
+        <div class="form-step active" id="step1">
+          <h3 class="step-title">Step 1 of 2 — Account Details</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" placeholder="John" required />
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" placeholder="Doe" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="studentEmail">Email Address</label>
+            <input type="email" id="studentEmail" placeholder="you@university.ac.za" required />
+          </div>
+          <div class="form-group">
+            <label for="studentPassword">Password</label>
+            <div class="input-wrap">
+              <input type="password" id="studentPassword" placeholder="Min 8 characters" required />
+              <button type="button" class="toggle-pw" id="toggleStudentPw" aria-label="Toggle password">👁</button>
+            </div>
+          </div>
+          <button type="button" class="btn-primary full" id="step1Next">Next →</button>
+        </div>
+
+        <!-- Step 2: Profile -->
+        <div class="form-step" id="step2">
+          <h3 class="step-title">Step 2 of 2 — Your Profile</h3>
+          <div class="avatar-upload-wrap">
+            <div class="avatar-preview" id="avatarPreview">
+              <span>+</span>
+            </div>
+            <div class="avatar-upload-info">
+              <label for="avatarInput" class="btn-outline-sm">Upload Photo</label>
+              <input type="file" id="avatarInput" accept="image/*" hidden />
+              <small>JPG, PNG – Max 5MB</small>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" placeholder="+27 81 234 5678" />
+            </div>
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" id="city" placeholder="Cape Town" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="university">University / Institution</label>
+            <input type="text" id="university" placeholder="University of Cape Town" />
+          </div>
+          <div class="form-group">
+            <label for="studyField">Field of Study</label>
+            <input type="text" id="studyField" placeholder="Computer Science" />
+          </div>
+          <div class="form-group">
+            <label for="skills">Skills (comma-separated)</label>
+            <input type="text" id="skills" placeholder="Photoshop, JavaScript, Writing" />
+          </div>
+          <div class="form-group">
+            <label for="bio">Short Bio</label>
+            <textarea id="bio" rows="3" placeholder="Tell employers a bit about yourself..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="cvInput">Upload CV (PDF)</label>
+            <div class="file-drop-zone" id="cvDropZone">
+              <span class="drop-icon">📄</span>
+              <span id="cvLabel">Drag & drop your CV or click to browse</span>
+              <input type="file" id="cvInput" accept=".pdf,.doc,.docx" hidden />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-outline" id="step2Back">← Back</button>
+            <button type="submit" class="btn-primary" id="registerBtn">Create Account 🚀</button>
+          </div>
+        </div>
+
+      </form>
+
+      <div class="auth-divider"><span>Already have an account?</span></div>
+      <a href="login.html" class="btn-ghost full">Log In</a>
+    </div>
+  </div>
+
+  <script type="module" src="register-student.js"></script>
+</body>
+</html>

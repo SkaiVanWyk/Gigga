@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post a Job – Gigga</title>
+  <meta name="description" content="Post a student side-job on Gigga and find flexible talent fast." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="inner-page">
+
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">G</span>
+        <span>Gigga</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="jobs.html">Browse Jobs</a>
+        <a href="post-job.html" class="active">Post a Job</a>
+        <a href="profile.html" id="navProfile">My Profile</a>
+        <button id="navLogout" class="btn-ghost">Log Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-header">
+    <div class="container">
+      <h1>Post a <span class="gradient-text">Job</span></h1>
+      <p>Fill in the details below and start receiving applications</p>
+    </div>
+  </section>
+
+  <section class="form-section section">
+    <div class="container form-container">
+
+      <div id="postJobMsg" class="auth-msg hidden"></div>
+
+      <form id="postJobForm" class="auth-form" novalidate>
+        <div class="form-group">
+          <label for="jobTitle">Job Title *</label>
+          <input type="text" id="jobTitle" placeholder="e.g. Social Media Manager" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="jobType">Job Type *</label>
+            <select id="jobType" required>
+              <option value="">Select type...</option>
+              <option>Part-time</option>
+              <option>Full-time</option>
+              <option>Freelance</option>
+              <option>Weekend</option>
+              <option>Once-off</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="jobCategory">Category *</label>
+            <select id="jobCategory" required>
+              <option value="">Select category...</option>
+              <option>Technology</option>
+              <option>Marketing & Media</option>
+              <option>Retail & Sales</option>
+              <option>Food & Hospitality</option>
+              <option>Events & Entertainment</option>
+              <option>Education</option>
+              <option>Healthcare</option>
+              <option>Finance</option>
+              <option>Creative Arts & Design</option>
+              <option>Logistics & Delivery</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="jobCity">City *</label>
+            <input type="text" id="jobCity" placeholder="Cape Town" required />
+          </div>
+          <div class="form-group">
+            <label for="jobPay">Pay / Rate</label>
+            <input type="text" id="jobPay" placeholder="e.g. R150/hr or R3000/month" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="jobDesc">Job Description *</label>
+          <textarea id="jobDesc" rows="6" placeholder="Describe the role, responsibilities, and what you're looking for in a candidate..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="jobRequirements">Requirements</label>
+          <textarea id="jobRequirements" rows="3" placeholder="List any required skills, qualifications, or experience..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="jobDeadline">Application Deadline</label>
+          <input type="date" id="jobDeadline" />
+        </div>
+        <div class="form-group">
+          <label for="jobTags">Tags / Skills (comma-separated)</label>
+          <input type="text" id="jobTags" placeholder="e.g. Photoshop, Instagram, Content Creation" />
+        </div>
+        <button type="submit" class="btn-primary full" id="postJobBtn">Post Job 🚀</button>
+      </form>
+    </div>
+  </section>
+
+  <script type="module" src="post-job.js"></script>
+</body>
+</html>

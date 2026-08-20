@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile – Gigga</title>
+  <meta name="description" content="Manage your Gigga profile, update your CV, and track your job applications." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="inner-page">
+
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">G</span>
+        <span>Gigga</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="jobs.html">Browse Jobs</a>
+        <a href="post-job.html" id="navPostJob" class="hidden">Post a Job</a>
+        <a href="profile.html" class="active">My Profile</a>
+        <button id="navLogout" class="btn-ghost">Log Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PROFILE HERO -->
+  <section class="profile-hero">
+    <div class="container profile-hero-inner">
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar" id="profileAvatar">
+          <img id="profileAvatarImg" src="" alt="Profile Photo" class="hidden" />
+          <span id="profileAvatarInitials"></span>
+        </div>
+        <label for="profileAvatarInput" class="avatar-edit-btn" id="avatarEditBtn" title="Change photo">📷</label>
+        <input type="file" id="profileAvatarInput" accept="image/*" hidden />
+      </div>
+      <div class="profile-hero-info">
+        <div class="profile-role-badge" id="profileRoleBadge"></div>
+        <h1 id="profileName">Loading...</h1>
+        <p id="profileTagline"></p>
+        <div class="profile-meta-tags" id="profileMetaTags"></div>
+      </div>
+      <div class="profile-hero-actions">
+        <button class="btn-primary" id="editProfileBtn">Edit Profile</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROFILE BODY -->
+  <section class="profile-body section">
+    <div class="container profile-grid">
+
+      <!-- LEFT SIDEBAR -->
+      <div class="profile-sidebar">
+        <div class="profile-card" id="profileAboutCard">
+          <h3>About</h3>
+          <p id="profileBio">No bio yet.</p>
+        </div>
+        <div class="profile-card" id="profileContactCard">
+          <h3>Contact</h3>
+          <div class="contact-item"><span>📧</span><span id="profileEmail"></span></div>
+          <div class="contact-item"><span>📞</span><span id="profilePhone"></span></div>
+          <div class="contact-item"><span>📍</span><span id="profileCity"></span></div>
+        </div>
+        <div class="profile-card" id="profileSkillsCard">
+          <h3>Skills</h3>
+          <div class="skills-tags" id="profileSkills"></div>
+        </div>
+        <!-- Student only -->
+        <div class="profile-card student-only" id="profileCvCard">
+          <h3>CV / Resume</h3>
+          <div id="cvSection">
+            <div id="cvExisting" class="hidden">
+              <a id="cvLink" href="#" target="_blank" class="cv-download-btn">📄 Download CV</a>
+              <small id="cvFilename"></small>
+            </div>
+            <label for="cvUploadInput" class="btn-outline-sm" id="cvUploadLabel">Upload / Replace CV</label>
+            <input type="file" id="cvUploadInput" accept=".pdf,.doc,.docx" hidden />
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN CONTENT -->
+      <div class="profile-main">
+
+        <!-- Student: Applications -->
+        <div class="student-only" id="applicationsSection">
+          <div class="section-header-sm">
+            <h2>My Applications</h2>
+            <span class="pill" id="appCount">0</span>
+          </div>
+          <div id="applicationsList"></div>
+          <div class="empty-state hidden" id="emptyApplications">
+            <span>📬</span>
+            <h3>No applications yet</h3>
+            <p><a href="jobs.html">Browse jobs</a> and start applying!</p>
+          </div>
+        </div>
+
+        <!-- Business: My Jobs -->
+        <div class="business-only hidden" id="myJobsSection">
+          <div class="section-header-sm">
+            <h2>My Posted Jobs</h2>
+            <a href="post-job.html" class="btn-primary-sm">+ Post New Job</a>
+          </div>
+          <div id="myJobsList"></div>
+          <div class="empty-state hidden" id="emptyMyJobs">
+            <span>💼</span>
+            <h3>No jobs posted yet</h3>
+            <p><a href="post-job.html">Post your first job</a> to start receiving applications</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- EDIT PROFILE MODAL -->
+  <div class="modal-overlay hidden" id="editModal">
+    <div class="modal-card large-modal">
+      <button class="modal-close" id="editModalClose">✕</button>
+      <h2>Edit Profile</h2>
+      <form id="editProfileForm" class="auth-form">
+        <div id="editFormContent"><!-- Filled dynamically --></div>
+        <div class="form-actions">
+          <button type="button" class="btn-outline" id="cancelEdit">Cancel</button>
+          <button type="submit" class="btn-primary" id="saveProfileBtn">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- APPLICANTS MODAL (business) -->
+  <div class="modal-overlay hidden" id="applicantsModal">
+    <div class="modal-card large-modal">
+      <button class="modal-close" id="applicantsModalClose">✕</button>
+      <h2 id="applicantsModalTitle">Applicants</h2>
+      <div id="applicantsList"></div>
+    </div>
+  </div>
+
+  <script type="module" src="profile.js"></script>
+</body>
+</html>
