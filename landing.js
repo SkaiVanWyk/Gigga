@@ -1,5 +1,19 @@
 import { supabase } from './supabase.js';
-import { animateCounter, buildJobCard, updateNav, bindLogout } from './utils.js';
+import { animateCounter, buildJobCard, updateNav, bindLogout, initDarkMode, toggleDarkMode } from './utils.js';
+
+/* ── Dark Mode ── */
+initDarkMode();
+const darkModeToggle = document.getElementById('darkModeToggle');
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const isDark = toggleDarkMode();
+    darkModeToggle.textContent = isDark ? '☀️' : '🌙';
+  });
+  
+  // Set initial icon
+  const isDark = document.documentElement.classList.contains('dark-mode');
+  darkModeToggle.textContent = isDark ? '☀️' : '🌙';
+}
 
 /* ── Navbar ── */
 const navbar = document.getElementById('navbar');

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saved Jobs – Gigga</title>
+  <meta name="description" content="View your saved jobs on Gigga and apply when you're ready." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="inner-page">
+
+  <!-- NAV -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">G</span>
+        <span>Gigga</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="jobs.html">Browse Jobs</a>
+        <a href="saved-jobs.html" class="active">Saved Jobs</a>
+        <a href="profile.html" id="navProfile">My Profile</a>
+        <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode">🌙</button>
+        <button id="navLogout" class="btn-ghost">Log Out</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Saved <span class="gradient-text">Jobs</span></h1>
+      <p>Your bookmarked opportunities</p>
+    </div>
+  </section>
+
+  <!-- SAVED JOBS SECTION -->
+  <section class="jobs-section">
+    <div class="container">
+      <div class="jobs-meta" id="savedJobsMeta">Loading saved jobs...</div>
+      <div class="jobs-grid" id="savedJobsGrid">
+        <div class="job-skeleton"></div>
+        <div class="job-skeleton"></div>
+        <div class="job-skeleton"></div>
+      </div>
+      <div class="empty-state hidden" id="emptySavedJobs">
+        <span>💾</span>
+        <h3>No saved jobs yet</h3>
+        <p><a href="jobs.html">Browse jobs</a> and save the ones you're interested in!</p>
+      </div>
+    </div>
+  </section>
+
+  <script type="module" src="saved-jobs.js"></script>
+</body>
+</html>

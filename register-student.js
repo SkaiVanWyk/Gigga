@@ -1,5 +1,18 @@
 import { supabase } from './supabase.js';
-import { showMsg, bindPasswordToggle } from './utils.js';
+import { showMsg, bindPasswordToggle, initDarkMode, toggleDarkMode } from './utils.js';
+
+/* ── Dark Mode ── */
+initDarkMode();
+const darkModeToggle = document.getElementById('darkModeToggle');
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const isDark = toggleDarkMode();
+    darkModeToggle.textContent = isDark ? '☀️' : '🌙';
+  });
+  
+  const isDark = document.documentElement.classList.contains('dark-mode');
+  darkModeToggle.textContent = isDark ? '☀️' : '🌙';
+}
 
 bindPasswordToggle('toggleStudentPw', 'studentPassword');
 
@@ -158,4 +171,23 @@ document.getElementById('registerStudentForm')?.addEventListener('submit', async
 
   showMsg('authMsg', '🎉 Account created! Redirecting to your profile...', 'success');
   setTimeout(() => { window.location.href = 'profile.html'; }, 1200);
+});
+
+document.getElementById('googleStudentBtn')?.addEventListener('click', async () => {
+  if (window.location.protocol === 'file:') {
+    showMsg('authMsg', 'Google Sign Up requires running the site on a local web server (e.g. Live Server or http://localhost) and does not support file:// URIs.');
+    return;
+  }
+  localStorage.setItem('oauth_role', 'student');
+  const currentDir = window.location.href.split('/').slice(0, -1).join('/');
+  const redirectTo = currentDir + '/profile.html';
+
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo }
+  });
+
+  if (error) {
+    showMsg('authMsg', error.message || 'Google signup failed.');
+  }
 });

@@ -20,8 +20,11 @@
       </a>
       <div class="nav-links" id="navLinks">
         <a href="jobs.html">Browse Jobs</a>
+        <a href="saved-jobs.html" id="navSavedJobs" class="hidden">Saved Jobs</a>
+        <a href="messages.html" id="navMessages">Messages</a>
         <a href="post-job.html" id="navPostJob" class="hidden">Post a Job</a>
         <a href="profile.html" class="active">My Profile</a>
+        <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode">🌙</button>
         <button id="navLogout" class="btn-ghost">Log Out</button>
       </div>
     </div>
@@ -140,6 +143,22 @@
       <button class="modal-close" id="applicantsModalClose">✕</button>
       <h2 id="applicantsModalTitle">Applicants</h2>
       <div id="applicantsList"></div>
+    </div>
+  </div>
+
+  <!-- ROLE SELECTION MODAL (For new OAuth users) -->
+  <div class="modal-overlay hidden" id="roleSelectionModal">
+    <div class="modal-card" style="max-width: 400px; text-align: center;">
+      <h2 style="margin-bottom: 8px;">Welcome to Gigga!</h2>
+      <p class="auth-sub" style="margin-bottom: 24px;">Please choose how you would like to use Gigga.</p>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <button type="button" class="btn-primary full" id="selectStudentBtn" style="padding: 14px; font-size: 1rem; border-radius: var(--radius);">
+          🎓 Join as a Student
+        </button>
+        <button type="button" class="btn-outline full" id="selectBusinessBtn" style="padding: 14px; font-size: 1rem; border-radius: var(--radius); border-color: var(--accent); color: var(--accent);">
+          💼 Join as a Business
+        </button>
+      </div>
     </div>
   </div>
 

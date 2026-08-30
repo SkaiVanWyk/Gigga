@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messages – Gigga</title>
+  <meta name="description" content="Message businesses and students on Gigga." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="inner-page">
+
+  <!-- NAV -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">G</span>
+        <span>Gigga</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="jobs.html">Browse Jobs</a>
+        <a href="messages.html" class="active">Messages</a>
+        <a href="profile.html" id="navProfile">My Profile</a>
+        <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode">🌙</button>
+        <button id="navLogout" class="btn-ghost">Log Out</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <div class="container">
+      <h1><span class="gradient-text">Messages</span></h1>
+      <p>Communicate with businesses and students</p>
+    </div>
+  </section>
+
+  <!-- MESSAGES SECTION -->
+  <section class="form-section section">
+    <div class="container">
+      <div class="messages-container">
+        <!-- Conversations List -->
+        <div class="conversations-list" id="conversationsList">
+          <div class="conversations-header">
+            <h3>Conversations</h3>
+          </div>
+          <div id="conversations">
+            <p style="color:var(--text-3);padding:20px;text-align:center;">Loading conversations...</p>
+          </div>
+        </div>
+
+        <!-- Message Thread -->
+        <div class="message-thread-container hidden" id="messageThreadContainer">
+          <div class="thread-header">
+            <button class="btn-back" id="backToConversations">← Back</button>
+            <div class="thread-header-info">
+              <h3 id="threadTitle">Conversation</h3>
+              <span id="threadSubtitle"></span>
+            </div>
+          </div>
+          <div class="message-thread" id="messageThread">
+            <p style="color:var(--text-3);padding:20px;text-align:center;">Select a conversation to view messages</p>
+          </div>
+          <div class="message-input-container">
+            <form id="messageForm" class="message-form">
+              <input type="text" id="messageInput" placeholder="Type your message..." required />
+              <button type="submit" class="btn-primary" id="sendMessageBtn">Send</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state hidden" id="emptyMessages">
+        <span>💬</span>
+        <h3>No messages yet</h3>
+        <p>Start a conversation by applying to jobs or contacting applicants</p>
+      </div>
+    </div>
+  </section>
+
+  <script type="module" src="messages.js"></script>
+</body>
+</html>

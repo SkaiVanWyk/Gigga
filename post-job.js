@@ -1,5 +1,18 @@
 import { supabase } from './supabase.js';
-import { showMsg } from './utils.js';
+import { showMsg, initDarkMode, toggleDarkMode } from './utils.js';
+
+/* ── Dark Mode ── */
+initDarkMode();
+const darkModeToggle = document.getElementById('darkModeToggle');
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const isDark = toggleDarkMode();
+    darkModeToggle.textContent = isDark ? '☀️' : '🌙';
+  });
+  
+  const isDark = document.documentElement.classList.contains('dark-mode');
+  darkModeToggle.textContent = isDark ? '☀️' : '🌙';
+}
 
 /* ── Auth guard: must be logged in as business ── */
 async function init() {

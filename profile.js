@@ -1,5 +1,18 @@
 import { supabase } from './supabase.js';
-import { getAvatarUrl, getCvUrl, timeAgo, showMsg } from './utils.js';
+import { getAvatarUrl, getCvUrl, timeAgo, showMsg, initDarkMode, toggleDarkMode } from './utils.js';
+
+/* ── Dark Mode ── */
+initDarkMode();
+const darkModeToggle = document.getElementById('darkModeToggle');
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const isDark = toggleDarkMode();
+    darkModeToggle.textContent = isDark ? '☀️' : '🌙';
+  });
+  
+  const isDark = document.documentElement.classList.contains('dark-mode');
+  darkModeToggle.textContent = isDark ? '☀️' : '🌙';
+}
 
 let currentUser    = null;
 let currentProfile = null;
@@ -7,6 +20,39 @@ let currentProfile = null;
 /* ══════════════════════════════════════════
    INIT
 ══════════════════════════════════════════ */
+async function createProfileAndInit(user, role) {
+  const fullName = user.user_metadata?.full_name || user.email.split('@')[0];
+  const { data: newProfile, error: createError } = await supabase
+    .from('profiles')
+    .insert({
+      id: user.id,
+      role: role,
+      full_name: fullName,
+      business_name: role === 'business' ? fullName : null,
+      email: user.email,
+      avatar_url: user.user_metadata?.avatar_url || null
+    })
+    .select()
+    .single();
+
+  if (createError) {
+    alert('Error creating profile: ' + createError.message);
+    return;
+  }
+
+  currentProfile = newProfile;
+  renderProfile(newProfile);
+  bindNav(newProfile);
+  bindAvatarUpload();
+  bindEditModal(newProfile);
+
+  if (newProfile.role === 'student') {
+    loadApplications(user.id);
+  } else {
+    loadMyJobs(user.id);
+  }
+}
+
 async function init() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -22,7 +68,30 @@ async function init() {
     .single();
 
   if (error || !profile) {
-    alert('Could not load profile. Please try again.');
+    // If profile is missing, check if they registered using a specific role button
+    const oauthRole = localStorage.getItem('oauth_role');
+    if (oauthRole === 'student' || oauthRole === 'business') {
+      localStorage.removeItem('oauth_role');
+      await createProfileAndInit(user, oauthRole);
+    } else {
+      // Show role selection modal
+      const modal = document.getElementById('roleSelectionModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        
+        // Add event listeners to the modal buttons
+        document.getElementById('selectStudentBtn')?.addEventListener('click', async () => {
+          modal.classList.add('hidden');
+          await createProfileAndInit(user, 'student');
+        });
+        document.getElementById('selectBusinessBtn')?.addEventListener('click', async () => {
+          modal.classList.add('hidden');
+          await createProfileAndInit(user, 'business');
+        });
+      } else {
+        alert('Could not load profile. Please try again.');
+      }
+    }
     return;
   }
   currentProfile = profile;
@@ -63,8 +132,8 @@ function renderProfile(profile) {
   const badge = document.getElementById('profileRoleBadge');
   if (badge) {
     badge.textContent  = isStudent ? '🎓 Student' : '💼 Business';
-    badge.style.background  = isStudent ? 'rgba(124,111,205,0.15)' : 'rgba(34,211,165,0.12)';
-    badge.style.color       = isStudent ? 'var(--accent-2)' : 'var(--green)';
+    badge.style.background  = isStudent ? 'var(--accent-glow)' : 'rgba(5, 150, 105, 0.1)';
+    badge.style.color       = isStudent ? 'var(--accent)' : 'var(--green)';
     badge.style.padding     = '4px 12px';
     badge.style.borderRadius= '999px';
     badge.style.fontSize    = '0.75rem';
@@ -483,6 +552,7 @@ function bindEditModal(profile) {
 function bindNav(profile) {
   const navLogout  = document.getElementById('navLogout');
   const navPostJob = document.getElementById('navPostJob');
+  const navSavedJobs = document.getElementById('navSavedJobs');
 
   if (navLogout) {
     navLogout.addEventListener('click', async () => {
@@ -492,6 +562,9 @@ function bindNav(profile) {
   }
   if (navPostJob && profile.role === 'business') {
     navPostJob.classList.remove('hidden');
+  }
+  if (navSavedJobs && profile.role === 'student') {
+    navSavedJobs.classList.remove('hidden');
   }
 }
 

@@ -11,6 +11,12 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="landing-page">
+  <script>
+    if (window.location.protocol === 'file:') {
+      document.write('<div style="background:#dc2626; color:white; padding:12px; text-align:center; font-family:sans-serif; font-size:14px; font-weight:bold; position:fixed; top:0; left:0; right:0; z-index:9999;">⚠️ Warning: This website uses ES Modules and database features which are blocked when opened directly via file://. Please run the project on a local web server (like VS Code Live Server) to use the site.</div>');
+      document.body.style.paddingTop = '50px';
+    }
+  </script>
 
   <!-- NAV -->
   <nav class="navbar" id="navbar">
@@ -22,6 +28,7 @@
       <div class="nav-links" id="navLinks">
         <a href="jobs.html">Browse Jobs</a>
         <a href="register-business.html">Post a Job</a>
+        <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode">🌙</button>
         <a href="login.html" class="btn-ghost">Log In</a>
         <a href="register-student.html" class="btn-primary-sm">Sign Up</a>
       </div>

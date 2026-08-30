@@ -1,8 +1,55 @@
 import { supabase } from './supabase.js';
-import { updateNav, bindLogout, buildJobCard, getAvatarUrl, getCvUrl, showMsg, timeAgo } from './utils.js';
+import { buildJobCard, getAvatarUrl, getCvUrl, showMsg, timeAgo, initDarkMode, toggleDarkMode } from './utils.js';
 
-updateNav();
-bindLogout();
+/* ── Dark Mode ── */
+initDarkMode();
+const darkModeToggle = document.getElementById('darkModeToggle');
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', () => {
+    const isDark = toggleDarkMode();
+    darkModeToggle.textContent = isDark ? '☀️' : '🌙';
+  });
+  
+  const isDark = document.documentElement.classList.contains('dark-mode');
+  darkModeToggle.textContent = isDark ? '☀️' : '🌙';
+}
+
+/* ── Update nav for logged in users ── */
+async function updateNavForAuth() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+
+  const navLogin  = document.getElementById('navLogin');
+  const navSignup = document.getElementById('navSignup');
+  const navLogout = document.getElementById('navLogout');
+  const navPostJob= document.getElementById('navPostJob');
+  const navProfile= document.getElementById('navProfile');
+  const navSavedJobs = document.getElementById('navSavedJobs');
+  const navMessages = document.getElementById('navMessages');
+
+  if (navLogin)  navLogin.classList.add('hidden');
+  if (navSignup) navSignup.classList.add('hidden');
+  if (navLogout) navLogout.classList.remove('hidden');
+  if (navProfile)navProfile.classList.remove('hidden');
+  if (navMessages) navMessages.classList.remove('hidden');
+
+  if (profile?.role === 'business' && navPostJob) {
+    navPostJob.classList.remove('hidden');
+  }
+  if (profile?.role === 'student' && navSavedJobs) {
+    navSavedJobs.classList.remove('hidden');
+  }
+}
+
+updateNavForAuth();
+
+/* ── Logout ── */
+document.getElementById('navLogout')?.addEventListener('click', async () => {
+  await supabase.auth.signOut();
+  window.location.href = 'index.html';
+});
 
 /* ── Navbar scroll ── */
 const hamburger = document.getElementById('hamburger');
@@ -16,6 +63,7 @@ let currentFilter = 'all';
 let searchTerm    = '';
 let cityFilter    = '';
 let typeFilter    = '';
+let savedJobIds   = new Set();
 
 /* ══════════════════════════════════════════
    LOAD JOBS
@@ -32,10 +80,24 @@ async function loadJobs() {
   }
 
   allJobs = jobs || [];
-  renderJobs();
+  
+  // Load saved jobs if logged in as student
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) {
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+    if (profile?.role === 'student') {
+      const { data: saved } = await supabase
+        .from('saved_jobs')
+        .select('job_id')
+        .eq('student_id', user.id);
+      savedJobIds = new Set(saved?.map(s => s.job_id) || []);
+    }
+  }
+  
+  await renderJobs();
 }
 
-function renderJobs() {
+async function renderJobs() {
   let filtered = allJobs;
 
   if (currentFilter !== 'all') {
@@ -71,15 +133,37 @@ function renderJobs() {
   grid.classList.remove('hidden');
   empty.classList.add('hidden');
   meta.textContent = `Showing ${filtered.length} job${filtered.length !== 1 ? 's' : ''}`;
-  grid.innerHTML = filtered.map(buildJobCard).join('');
+  
+  const { data: { user } } = await supabase.auth.getUser();
+  const showSaveButtons = user ? true : false;
+  
+  grid.innerHTML = filtered.map(job => 
+    buildJobCard(job, showSaveButtons, savedJobIds.has(job.id))
+  ).join('');
 
   /* Bind card clicks */
   grid.querySelectorAll('.job-card').forEach(card => {
-    card.addEventListener('click', () => openJobModal(card.dataset.id));
+    card.addEventListener('click', (e) => {
+      if (!e.target.classList.contains('job-save-btn')) {
+        openJobModal(card.dataset.id);
+      }
+    });
     card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') openJobModal(card.dataset.id);
+      if (e.key === 'Enter' && !e.target.classList.contains('job-save-btn')) {
+        openJobModal(card.dataset.id);
+      }
     });
   });
+  
+  /* Bind save buttons */
+  if (showSaveButtons) {
+    grid.querySelectorAll('.job-save-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleSaveJob(btn.dataset.jobId, btn);
+      });
+    });
+  }
 }
 
 /* ══════════════════════════════════════════
@@ -202,6 +286,55 @@ async function applyForJob(jobId, jobTitle) {
 
   btn.textContent = '✅ Application Sent!';
   btn.style.background = 'linear-gradient(135deg, var(--green), #10b981)';
+}
+
+/* ══════════════════════════════════════════
+   TOGGLE SAVE JOB
+══════════════════════════════════════════ */
+async function toggleSaveJob(jobId, btn) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    if (confirm('You need to be logged in to save jobs. Go to login page?')) {
+      window.location.href = 'login.html';
+    }
+    return;
+  }
+
+  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+  if (profile?.role !== 'student') {
+    alert('Only students can save jobs.');
+    return;
+  }
+
+  const isSaved = btn.classList.contains('saved');
+  
+  if (isSaved) {
+    // Unsave
+    const { error } = await supabase
+      .from('saved_jobs')
+      .delete()
+      .eq('student_id', user.id)
+      .eq('job_id', jobId);
+    
+    if (!error) {
+      btn.classList.remove('saved');
+      btn.textContent = '♡';
+      btn.setAttribute('aria-label', 'Save job');
+      savedJobIds.delete(jobId);
+    }
+  } else {
+    // Save
+    const { error } = await supabase
+      .from('saved_jobs')
+      .insert({ student_id: user.id, job_id: jobId });
+    
+    if (!error) {
+      btn.classList.add('saved');
+      btn.textContent = '♥';
+      btn.setAttribute('aria-label', 'Unsave job');
+      savedJobIds.add(jobId);
+    }
+  }
 }
 
 /* ══════════════════════════════════════════

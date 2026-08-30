@@ -111,7 +111,7 @@ export function getCvUrl(path) {
 }
 
 /* ── Build job card HTML ── */
-export function buildJobCard(job) {
+export function buildJobCard(job, showSave = false, isSaved = false) {
   const logo = job.profiles?.avatar_url
     ? `<img src="${getAvatarUrl(job.profiles.avatar_url)}" alt="${job.profiles.business_name}" />`
     : `<span>${(job.profiles?.business_name || 'B')[0].toUpperCase()}</span>`;
@@ -120,8 +120,15 @@ export function buildJobCard(job) {
     `<span class="job-tag">${t}</span>`
   ).join('');
 
+  const saveButton = showSave ? `
+    <button class="job-save-btn ${isSaved ? 'saved' : ''}" data-job-id="${job.id}" aria-label="${isSaved ? 'Unsave job' : 'Save job'}">
+      ${isSaved ? '♥' : '♡'}
+    </button>
+  ` : '';
+
   return `
     <div class="job-card" data-id="${job.id}" tabindex="0" role="button" aria-label="View ${job.title}">
+      ${saveButton}
       <div class="job-card-header">
         <div class="job-biz-logo">${logo}</div>
         <div>
@@ -139,4 +146,163 @@ export function buildJobCard(job) {
       </div>
     </div>
   `;
+}
+
+/* ── Dark Mode ── */
+export function initDarkMode() {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const saved = localStorage.getItem('darkMode');
+  const isDark = saved === 'true' || (saved === null && prefersDark);
+  
+  if (isDark) {
+    document.documentElement.classList.add('dark-mode');
+  }
+  
+  return isDark;
+}
+
+export function toggleDarkMode() {
+  document.documentElement.classList.toggle('dark-mode');
+  const isDark = document.documentElement.classList.contains('dark-mode');
+  localStorage.setItem('darkMode', isDark);
+  return isDark;
+}
+
+/* ── Loading States ── */
+export function setLoading(btn, loading, originalText = '') {
+  if (!btn) return;
+  
+  if (loading) {
+    btn.dataset.originalText = btn.textContent;
+    btn.disabled = true;
+    btn.innerHTML = `<span class="btn-spinner"></span> ${originalText || 'Loading...'}`;
+  } else {
+    btn.disabled = false;
+    btn.textContent = btn.dataset.originalText || originalText;
+  }
+}
+
+export function showLoadingOverlay(show = true) {
+  let overlay = document.getElementById('loadingOverlay');
+  
+  if (show) {
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'loadingOverlay';
+      overlay.className = 'loading-overlay';
+      overlay.innerHTML = '<div class="loading-spinner"></div>';
+      document.body.appendChild(overlay);
+    }
+    overlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  } else {
+    overlay?.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+}
+
+/* ── Form Validation ── */
+export function validateEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
+
+export function validatePhone(phone) {
+  const re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+  return re.test(phone);
+}
+
+export function validatePassword(password) {
+  return password.length >= 8;
+}
+
+export function setFieldError(field, message) {
+  const group = field.closest('.form-group');
+  if (!group) return;
+  
+  let errorEl = group.querySelector('.field-error');
+  if (!errorEl) {
+    errorEl = document.createElement('small');
+    errorEl.className = 'field-error';
+    group.appendChild(errorEl);
+  }
+  
+  errorEl.textContent = message;
+  field.classList.add('error');
+}
+
+export function clearFieldError(field) {
+  const group = field.closest('.form-group');
+  if (!group) return;
+  
+  const errorEl = group.querySelector('.field-error');
+  if (errorEl) errorEl.remove();
+  
+  field.classList.remove('error');
+}
+
+export function clearAllErrors(form) {
+  form.querySelectorAll('.field-error').forEach(el => el.remove());
+  form.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+}
+
+/* ── Local Storage Helpers ── */
+export function storageGet(key, defaultValue = null) {
+  try {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : defaultValue;
+  } catch {
+    return defaultValue;
+  }
+}
+
+export function storageSet(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {
+    console.error('Storage error:', e);
+  }
+}
+
+export function storageRemove(key) {
+  localStorage.removeItem(key);
+}
+
+/* ── Debounce ── */
+export function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+/* ── Throttle ── */
+export function throttle(func, limit) {
+  let inThrottle;
+  return function(...args) {
+    if (!inThrottle) {
+      func.apply(this, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+}
+
+/* ── Format Currency ── */
+export function formatCurrency(amount, currency = 'ZAR') {
+  return new Intl.NumberFormat('en-ZA', {
+    style: 'currency',
+    currency: currency
+  }).format(amount);
+}
+
+/* ── Truncate Text ── */
+export function truncate(text, length = 100) {
+  if (!text || text.length <= length) return text;
+  return text.slice(0, length) + '...';
 }
