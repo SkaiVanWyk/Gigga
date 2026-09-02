@@ -22,6 +22,10 @@ let currentProfile = null;
 ══════════════════════════════════════════ */
 async function createProfileAndInit(user, role) {
   const fullName = user.user_metadata?.full_name || user.email.split('@')[0];
+  
+  // Wait a moment for the auth session to be established
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
   const { data: newProfile, error: createError } = await supabase
     .from('profiles')
     .insert({
@@ -36,6 +40,7 @@ async function createProfileAndInit(user, role) {
     .single();
 
   if (createError) {
+    console.error('Profile creation error:', createError);
     alert('Error creating profile: ' + createError.message);
     return;
   }

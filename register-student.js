@@ -112,15 +112,28 @@ document.getElementById('registerStudentForm')?.addEventListener('submit', async
   const bio        = document.getElementById('bio').value.trim();
 
   /* 1. Sign up */
-  const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
+  console.log('Attempting to sign up with:', { email, passwordLength: password.length });
+  const { data: authData, error: authError } = await supabase.auth.signUp({ 
+    email, 
+    password,
+    options: {
+      emailRedirectTo: window.location.origin + '/profile.html'
+    }
+  });
+  
+  console.log('Auth response:', { authData, authError });
+  
   if (authError) {
-    showMsg('authMsg', authError.message);
+    console.error('Auth error:', authError);
+    showMsg('authMsg', 'Authentication failed: ' + authError.message);
     btn.disabled = false;
     btn.textContent = 'Create Account 🚀';
     return;
   }
 
   const userId = authData.user?.id;
+  console.log('User ID:', userId);
+  
   if (!userId) {
     showMsg('authMsg', 'Registration failed. Please try again.');
     btn.disabled = false;
@@ -134,7 +147,14 @@ document.getElementById('registerStudentForm')?.addEventListener('submit', async
     const ext  = avatarFile.name.split('.').pop();
     const path = `${userId}/avatar.${ext}`;
     const { error: uploadErr } = await supabase.storage.from('avatars').upload(path, avatarFile, { upsert: true });
-    if (!uploadErr) avatarPath = path;
+    if (uploadErr) {
+      console.error('Avatar upload error:', uploadErr);
+      showMsg('authMsg', 'Failed to upload avatar: ' + uploadErr.message);
+      btn.disabled = false;
+      btn.textContent = 'Create Account 🚀';
+      return;
+    }
+    avatarPath = path;
   }
 
   /* 3. Upload CV */
@@ -143,11 +163,18 @@ document.getElementById('registerStudentForm')?.addEventListener('submit', async
     const ext  = cvFile.name.split('.').pop();
     const path = `${userId}/cv.${ext}`;
     const { error: cvErr } = await supabase.storage.from('cvs').upload(path, cvFile, { upsert: true });
-    if (!cvErr) cvPath = path;
+    if (cvErr) {
+      console.error('CV upload error:', cvErr);
+      showMsg('authMsg', 'Failed to upload CV: ' + cvErr.message);
+      btn.disabled = false;
+      btn.textContent = 'Create Account 🚀';
+      return;
+    }
+    cvPath = path;
   }
 
   /* 4. Insert profile */
-  const { error: profileError } = await supabase.from('profiles').insert({
+  const profileData = {
     id: userId,
     role: 'student',
     full_name: `${firstName} ${lastName}`,
@@ -156,14 +183,22 @@ document.getElementById('registerStudentForm')?.addEventListener('submit', async
     city,
     university,
     study_field: studyField,
-    skills,
+    skills: skills && skills.length > 0 ? skills : null,
     bio,
     avatar_url: avatarPath,
     cv_url: cvPath,
-  });
+  };
+
+  console.log('Inserting profile:', profileData);
+  
+  // Wait a moment for the auth session to be established
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  const { error: profileError } = await supabase.from('profiles').insert(profileData);
 
   if (profileError) {
-    showMsg('authMsg', profileError.message);
+    console.error('Profile insert error:', profileError);
+    showMsg('authMsg', 'Failed to create profile: ' + profileError.message);
     btn.disabled = false;
     btn.textContent = 'Create Account 🚀';
     return;

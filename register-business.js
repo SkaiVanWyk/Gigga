@@ -85,6 +85,9 @@ document.getElementById('registerBusinessForm')?.addEventListener('submit', asyn
   }
 
   /* 3. Insert profile */
+  // Wait a moment for the auth session to be established
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
   const { error: profileError } = await supabase.from('profiles').insert({
     id: userId,
     role: 'business',
