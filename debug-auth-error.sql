@@ -115,15 +115,40 @@ ORDER BY extname;
 
 -- 9. Check recent database errors (if available in pg_stat_statements)
 -- This requires the pg_stat_statements extension
-SELECT 
-    query,
-    calls,
-    total_time,
-    rows
-FROM pg_stat_statements
-WHERE query LIKE '%auth%' OR query LIKE '%user%'
-ORDER BY total_time DESC
-LIMIT 10;
+-- Note: Column name differs between PostgreSQL versions (total_time vs total_exec_time)
+DO $$
+BEGIN
+  -- Try with total_exec_time (PostgreSQL 13+)
+  BEGIN
+    EXECUTE '
+      SELECT 
+        query,
+        calls,
+        total_exec_time,
+        rows
+      FROM pg_stat_statements
+      WHERE query LIKE ''%auth%'' OR query LIKE ''%user%''
+      ORDER BY total_exec_time DESC
+      LIMIT 10';
+    RAISE NOTICE 'pg_stat_statements query successful (using total_exec_time)';
+  EXCEPTION WHEN undefined_column THEN
+    -- Fall back to total_time (older PostgreSQL versions)
+    BEGIN
+      EXECUTE '
+        SELECT 
+          query,
+          calls,
+          total_time,
+          rows
+        FROM pg_stat_statements
+        WHERE query LIKE ''%auth%'' OR query LIKE ''%user%''
+        ORDER BY total_time DESC
+        LIMIT 10';
+      RAISE NOTICE 'pg_stat_statements query successful (using total_time)';
+    EXCEPTION WHEN OTHERS THEN
+      RAISE NOTICE 'pg_stat_statements not available or query failed: %', SQLERRM;
+  END;
+END $$;
 
 -- 10. Check if there are any row-level security issues with auth schema
 SELECT 
