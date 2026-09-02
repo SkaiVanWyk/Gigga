@@ -391,19 +391,17 @@ async function openApplicantsModal(jobId, jobTitle) {
 
     list.querySelectorAll('.status-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
-        const isAccept = btn.dataset.status === 'accepted';
-        
-        if (isAccept) {
-          // Show payment modal for accepted applications
-          showPaymentModal(btn.dataset.appId, jobId, jobTitle);
-        } else {
-          // Direct rejection
+        // TEMPORARILY DISABLED: Payment modal functionality
+        // const isAccept = btn.dataset.status === 'accepted';
+        // if (isAccept) {
+        //   showPaymentModal(btn.dataset.appId, jobId, jobTitle);
+        // } else {
           const { error } = await supabase
             .from('applications')
             .update({ status: btn.dataset.status })
             .eq('id', btn.dataset.appId);
           if (!error) openApplicantsModal(jobId, jobTitle);
-        }
+        // }
       });
     });
   }
@@ -415,8 +413,9 @@ document.getElementById('applicantsModalClose')?.addEventListener('click', () =>
 });
 
 /* ══════════════════════════════════════════
-   PAYMENT MODAL (business)
+   PAYMENT MODAL (business) - TEMPORARILY DISABLED
 ══════════════════════════════════════════ */
+/*
 function showPaymentModal(applicationId, jobId, jobTitle) {
   let modal = document.getElementById('paymentModal');
   const form = document.getElementById('paymentForm');
@@ -556,6 +555,7 @@ async function processPayment(applicationId, jobId) {
     submitBtn.textContent = 'Accept & Record Payment';
   }
 }
+*/
 
 /* ══════════════════════════════════════════
    AVATAR UPLOAD

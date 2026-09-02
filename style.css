@@ -1179,8 +1179,9 @@ img { max-width: 100%; display: block; }
 .modal-apply-btn { margin-top: 24px; width: 100%; }
 
 /* =============================================
-   PAYMENT MODAL
+   PAYMENT MODAL - TEMPORARILY DISABLED
    ============================================= */
+/*
 .modal {
   position: fixed;
   inset: 0;
@@ -1282,6 +1283,7 @@ img { max-width: 100%; display: block; }
   outline: none;
   border-color: var(--accent);
 }
+*/
 
 /* =============================================
    FORM PAGE (Post Job)
