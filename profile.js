@@ -391,11 +391,19 @@ async function openApplicantsModal(jobId, jobTitle) {
 
     list.querySelectorAll('.status-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
-        const { error } = await supabase
-          .from('applications')
-          .update({ status: btn.dataset.status })
-          .eq('id', btn.dataset.appId);
-        if (!error) openApplicantsModal(jobId, jobTitle);
+        const isAccept = btn.dataset.status === 'accepted';
+        
+        if (isAccept) {
+          // Show payment modal for accepted applications
+          showPaymentModal(btn.dataset.appId, jobId, jobTitle);
+        } else {
+          // Direct rejection
+          const { error } = await supabase
+            .from('applications')
+            .update({ status: btn.dataset.status })
+            .eq('id', btn.dataset.appId);
+          if (!error) openApplicantsModal(jobId, jobTitle);
+        }
       });
     });
   }
@@ -405,6 +413,149 @@ document.getElementById('applicantsModalClose')?.addEventListener('click', () =>
   document.getElementById('applicantsModal').classList.add('hidden');
   document.body.style.overflow = '';
 });
+
+/* ══════════════════════════════════════════
+   PAYMENT MODAL (business)
+══════════════════════════════════════════ */
+function showPaymentModal(applicationId, jobId, jobTitle) {
+  let modal = document.getElementById('paymentModal');
+  const form = document.getElementById('paymentForm');
+  
+  if (!modal) {
+    // Create payment modal if it doesn't exist
+    const paymentModalHTML = `
+      <div id="paymentModal" class="modal hidden">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>💰 Payment Details</h3>
+            <button id="paymentModalClose" class="modal-close">×</button>
+          </div>
+          <form id="paymentForm">
+            <div class="form-group">
+              <label for="paymentAmount">Payment Amount (ZAR)</label>
+              <input type="number" id="paymentAmount" name="amount" required min="0" step="0.01" placeholder="0.00">
+            </div>
+            <div class="form-group">
+              <label for="paymentMethod">Payment Method</label>
+              <select id="paymentMethod" name="method" required>
+                <option value="">Select method</option>
+                <option value="cash">Cash</option>
+                <option value="bank_transfer">Bank Transfer</option>
+                <option value="eft">EFT</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="paymentNotes">Notes (optional)</label>
+              <textarea id="paymentNotes" name="notes" rows="3" placeholder="Any additional payment details..."></textarea>
+            </div>
+            <div class="modal-actions">
+              <button type="button" id="cancelPayment" class="btn-outline">Cancel</button>
+              <button type="submit" class="btn-primary">Accept & Record Payment</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', paymentModalHTML);
+    
+    // Get the modal reference after creating it
+    modal = document.getElementById('paymentModal');
+    
+    // Add event listeners
+    document.getElementById('paymentModalClose').addEventListener('click', closePaymentModal);
+    document.getElementById('cancelPayment').addEventListener('click', closePaymentModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closePaymentModal(); });
+    
+    document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await processPayment(applicationId, jobId);
+    });
+  }
+  
+  // Reset form and show modal
+  document.getElementById('paymentForm').reset();
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePaymentModal() {
+  const modal = document.getElementById('paymentModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+}
+
+async function processPayment(applicationId, jobId) {
+  const amount = parseFloat(document.getElementById('paymentAmount').value);
+  const method = document.getElementById('paymentMethod').value;
+  const notes = document.getElementById('paymentNotes').value;
+  
+  const submitBtn = document.querySelector('#paymentForm button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Processing...';
+  
+  try {
+    // Get application details
+    const { data: app } = await supabase
+      .from('applications')
+      .select('*, profiles(full_name), jobs(title, business_id)')
+      .eq('id', applicationId)
+      .single();
+    
+    if (!app) throw new Error('Application not found');
+    
+    // Update application with payment details and accept status
+    const { error: updateError } = await supabase
+      .from('applications')
+      .update({
+        status: 'accepted',
+        payment_amount: amount,
+        payment_method: method,
+        payment_notes: notes,
+        payment_status: 'pending',
+        payment_date: new Date().toISOString()
+      })
+      .eq('id', applicationId);
+    
+    if (updateError) throw updateError;
+    
+    // Create payment history record
+    const { error: historyError } = await supabase
+      .from('payment_history')
+      .insert({
+        application_id: applicationId,
+        job_id: jobId,
+        student_id: app.student_id,
+        business_id: app.jobs.business_id,
+        amount: amount,
+        payment_method: method,
+        payment_status: 'pending',
+        notes: notes
+      });
+    
+    if (historyError) throw historyError;
+    
+    // Close modals and refresh
+    closePaymentModal();
+    document.getElementById('applicantsModal').classList.add('hidden');
+    document.body.style.overflow = '';
+    
+    alert(`Application accepted! Payment of R${amount.toFixed(2)} recorded as pending. The student will be notified.`);
+    
+    // Refresh the applicants list
+    const jobTitle = app.jobs.title;
+    openApplicantsModal(jobId, jobTitle);
+    
+  } catch (error) {
+    console.error('Payment processing error:', error);
+    alert('Failed to process payment: ' + error.message);
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Accept & Record Payment';
+  }
+}
 
 /* ══════════════════════════════════════════
    AVATAR UPLOAD

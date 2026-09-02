@@ -1179,6 +1179,111 @@ img { max-width: 100%; display: block; }
 .modal-apply-btn { margin-top: 24px; width: 100%; }
 
 /* =============================================
+   PAYMENT MODAL
+   ============================================= */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.25s ease;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-1);
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-3);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition);
+}
+
+.modal-close:hover {
+  background: var(--bg-card-2);
+  color: var(--text-1);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding: 20px 24px;
+  border-top: 1px solid var(--border);
+}
+
+#paymentForm {
+  padding: 24px;
+}
+
+#paymentForm .form-group {
+  margin-bottom: 16px;
+}
+
+#paymentForm label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: var(--text-1);
+  font-size: 0.9rem;
+}
+
+#paymentForm input,
+#paymentForm select,
+#paymentForm textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-2);
+  color: var(--text-1);
+  font-size: 0.95rem;
+  transition: border-color var(--transition);
+}
+
+#paymentForm input:focus,
+#paymentForm select:focus,
+#paymentForm textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* =============================================
    FORM PAGE (Post Job)
    ============================================= */
 .form-section { background: var(--bg); }
