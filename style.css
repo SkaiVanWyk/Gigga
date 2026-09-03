@@ -32,21 +32,28 @@
   --transition: 0.22s ease;
 }
 
-/* Dark Mode Variables */
+/* Dark Mode Variables - Gruvbox Dark Theme */
 .dark-mode {
-  --bg:          #0f172a;
-  --bg-2:        #1e293b;
-  --bg-card:     #1e293b;
-  --bg-card-2:   #334155;
-  --border:      #334155;
-  --border-hover:#475569;
+  --bg:          #1d2021;
+  --bg-2:        #282828;
+  --bg-card:     #282828;
+  --bg-card-2:   #3c3836;
+  --border:      #3c3836;
+  --border-hover:#504945;
 
-  --text-1:  #f1f5f9;
-  --text-2:  #cbd5e1;
-  --text-3:  #94a3b8;
+  --accent:      #d79921;
+  --accent-2:    #fe8019;
+  --accent-glow: rgba(215, 153, 33, 0.15);
+  --green:       #98971a;
+  --amber:       #d79921;
+  --red:         #cc241d;
 
-  --shadow:  0 4px 20px rgba(0, 0, 0, 0.3);
-  --shadow-lg:0 8px 30px rgba(0, 0, 0, 0.4);
+  --text-1:  #ebdbb2;
+  --text-2:  #d5c4a1;
+  --text-3:  #bdae93;
+
+  --shadow:  0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-lg:0 8px 30px rgba(0, 0, 0, 0.5);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
